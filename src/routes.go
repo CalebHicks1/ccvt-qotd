@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -38,6 +39,35 @@ func home(w http.ResponseWriter, r *http.Request) {
 	templ.Execute(w, data)
 }
 
+func top(w http.ResponseWriter, r *http.Request) {
+
+	// Build template from index.html
+	templ, err := template.ParseFiles("../static/templates/top.html")
+	if err != nil {
+		fmt.Print(err)
+	}
+
+	// get most recent question
+	result := DB.QueryRow("select id, body from questions order by date_submitted desc limit 1")
+
+	var resultQuestion QuestionRecord
+	err = result.Scan(&resultQuestion.Id, &resultQuestion.Body)
+	if err != nil {
+		fmt.Printf("error: %s", err.Error())
+	}
+
+	question := Question{
+		Id:   resultQuestion.Id,
+		Body: resultQuestion.Body,
+	}
+
+	data := PageData{
+		Question: question,
+	}
+
+	templ.Execute(w, data)
+}
+
 func control(w http.ResponseWriter, r *http.Request) {
 	//http.ServeFile(w, r, working_dir+"static/index.html")
 
@@ -68,7 +98,7 @@ func control(w http.ResponseWriter, r *http.Request) {
 		}
 
 		question := Question{
-			Id:   resultQuestion.Id,
+			Id:   int(resultQuestion.Id),
 			Body: resultQuestion.Body,
 		}
 
@@ -177,37 +207,42 @@ func get_remaining_votes(w http.ResponseWriter, r *http.Request) int {
 // API Routes
 
 func get_answers(w http.ResponseWriter, r *http.Request) {
-
+	var queryResult *sql.Rows
+	var err error
 	question_id := r.FormValue("question_id")
 	if r.FormValue("source") == "control" {
 		session, _ := store.Get(r, "session")
 		if session.Values["logged_in"] != nil && session.Values["logged_in"].(bool) {
-			queryResult, err := DB.Query("select id, body, author from answers where question_id=? and approved=0", question_id)
-			if err != nil {
-				panic(err.Error()) // proper error handling instead of panic in your app
-			}
-			var answers []Answer
-			for queryResult.Next() {
-				var a Answer
-				err = queryResult.Scan(
-					&a.Id,
-					&a.Body,
-					&a.Author,
-				)
-				answers = append(answers, a)
-			}
-			responseBytes, err := json.Marshal(answers)
-			if err != nil {
-				fmt.Printf("json error")
-			}
-			fmt.Fprintf(w, "%s", string(responseBytes))
+			queryResult, err = DB.Query("select id, body, author, votes from answers where question_id=? and approved=0", question_id)
+			// if err != nil {
+			// 	panic(err.Error()) // proper error handling instead of panic in your app
+			// }
+			// var answers []Answer
+			// for queryResult.Next() {
+			// 	var a Answer
+			// 	err = queryResult.Scan(
+			// 		&a.Id,
+			// 		&a.Body,
+			// 		&a.Author,
+			// 	)
+			// 	answers = append(answers, a)
+			// }
+			// responseBytes, err := json.Marshal(answers)
+			// if err != nil {
+			// 	fmt.Printf("json error")
+			// }
+			// fmt.Fprintf(w, "%s", string(responseBytes))
 		}
+	} else if r.FormValue("source") == "home" {
+		queryResult, err = DB.Query("select id, body, author, votes from answers where question_id=? and approved=1 order by date_submitted ASC", question_id)
 	} else {
+		queryResult, err = DB.Query("select id, body, author, votes from answers where question_id=? and approved=1 order by votes DESC", question_id)
+	}
+	if err != nil {
+		fmt.Print(err.Error()) // proper error handling instead of panic in your app
+	}
+	if queryResult != nil {
 
-		queryResult, err := DB.Query("select id, body, author, votes from answers where question_id=? and approved=1", question_id)
-		if err != nil {
-			panic(err.Error()) // proper error handling instead of panic in your app
-		}
 		var answers []Answer
 		for queryResult.Next() {
 			var a Answer

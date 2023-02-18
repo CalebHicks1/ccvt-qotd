@@ -102,6 +102,7 @@ func main() {
 	// Define routes
 	r.HandleFunc("/", home)
 	r.HandleFunc("/control", control)
+	r.HandleFunc("/top", top)
 	r.HandleFunc("/login", login).Methods("POST")
 	r.HandleFunc("/api/answers", get_answers).Methods("GET")
 	r.HandleFunc("/api/answers", post_answer).Methods("POST")
