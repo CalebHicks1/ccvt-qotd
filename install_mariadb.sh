@@ -1,5 +1,6 @@
+#!/bin/bash
 SQL_PASSWORD=$1
-if [[ $1 -eq 0 ]]
+if [[ -z $SQL_PASSWORD ]]
 then
 	echo "Please Specify DB password"
 	exit
@@ -15,5 +16,7 @@ sudo add-apt-repository 'deb [arch=amd64,arm64,ppc64el] https://mariadb.mirror.l
 sudo apt update && sudo apt install -y mariadb-server mariadb-client
 
 
-sudo mysql -u root -h localhost "drop schema if exists qotd;create schema qotd;"
+sudo systemctl enable mariadb
+
+echo "drop schema if exists qotd;create schema qotd;" | sudo mysql -u root -h localhost
 echo "CREATE USER 'qotd'@'localhost' IDENTIFIED BY '${SQL_PASSWORD}'; GRANT ALL PRIVILEGES ON qotd.* TO 'qotd'@'localhost';" | sudo mysql -u root -h localhost "qotd"

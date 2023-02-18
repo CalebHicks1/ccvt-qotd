@@ -13,13 +13,23 @@ For running without Docker
 cd src/
 go mod init webserver
 go mod tidy
-GOOS=linux go build -ldflags="-s -w" -o ./bin/web-app ./main.go
+go build
 ```
 2. Configure nginx
 ```
 ./install_and_configure_nginx.sh qotd.ccvt-home.com
 ```
 3. Copy service script to `/lib/systemd/system/web-app.service`
+
+4. Set up Mariadb
+```
+./install_mariadb.sh {SQL PASSWORD}
+./initialize_mariadb.sh {SQL PASSWORD}
+```
+5. Test Mariadb connection:
+```
+mysql -u "qotd" "-ppassword" -h localhost qotd
+```
 
 # Docker Setup
 Create `.env` file with the following values:

@@ -46,6 +46,12 @@ func home(w http.ResponseWriter, r *http.Request) {
 	templ.Execute(w, data)
 }
 
+// Testing
+func loader_auth(w http.ResponseWriter, r *http.Request) {
+	token := "loaderio-d76bfe3fee5c082595ab976a8b88ed42"
+	fmt.Fprintf(w, "%s", token)
+}
+
 // API Routes
 
 func api_get(w http.ResponseWriter, r *http.Request) {

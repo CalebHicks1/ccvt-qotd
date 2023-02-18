@@ -93,6 +93,7 @@ func main() {
 		Methods("POST")
 	r.HandleFunc("/api/answers", get_answers).Methods("GET")
 	r.HandleFunc("/api/questions", get_questions).Methods("GET")
+	r.HandleFunc("/loaderio-d76bfe3fee5c082595ab976a8b88ed42/", loader_auth)
 
 	//connect to db
 	connectionString := fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/%s", "qotd", os.Getenv("DB-PASSWORD"), "qotd")
