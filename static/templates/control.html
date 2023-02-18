@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>CCVT QOTD</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <head>
+        <link rel="stylesheet" href="/static/templates/stylesheet.css">
+    </head>
+    <link rel="shortcut icon" href="/static/images/favicon.png">
+</head>
+
+<body>
+    <h1>Control Panel</h1>
+
+    <form style="padding:20px" action="/api/questions" method="POST">
+        <label for="body" style="color:#c64600">New Question:</label><br>
+        <textarea id="body" name="body"></textarea><br>
+        <input class="button" type="submit" value="Submit" style="width:200px">
+    </form>
+
+
+    <h2 style="color:#c64600">Answers</h2>
+    <div id="answers">
+
+    </div>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script>
+        function display_answers(answers_json) {
+            var answers = JSON.parse(answers_json);
+            answers_list = document.getElementById('answers');
+            answers_list.innerHTML = ""
+            for (let i = 0; i < answers.length; i++) {
+
+                const answer = document.createElement('div');
+                // answer.classList.add("answer-box");
+                // const text = document.createElement('p');
+                // text.innerText = '"' + answers[i]["body"] + '"';
+                // answer.appendChild(text);
+
+                answer.innerHTML = `
+            <div class="d-flex align-items-center answer-bg">
+                    <div style=" margin-left:auto; margin-top:auto; margin-bottom:auto; margin-right:5px">
+                        <form action="/api/approve" method="POST">
+                            <input type="hidden" name="answer_id" , value="${answers[i]['Id']}">
+                            <button class="vote-button" name="vote" value="vote">Approve</button>
+                        </form>
+                    </div>
+                    <div class="answer-box">
+                        <p>"${answers[i]["Body"]}"</p>
+                        <span style="float: right;">- ${answers[i]["Author"]}</span><br>
+                    </div>
+                </div>
+            `;
+                answers_list.appendChild(answer);
+            }
+        }
+
+        function load_answers() {
+            $.ajax({
+                url: "/api/answers?question_id={{ .Question.Id }}&source=control",
+                type: "GET",
+                success: function (result) {
+                    display_answers(result);
+                },
+                error: function (error) {
+                    console.log(error);
+                }
+            })
+        }
+
+        $(document).ready(load_answers);
+        var intervalId = window.setInterval(load_answers, 5000);
+    </script>
+</body>
+
+</html>

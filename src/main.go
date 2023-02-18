@@ -23,6 +23,7 @@ import (
 
 var working_dir, static_dir, port, local, session_key string
 var store = sessions.NewCookieStore([]byte(os.Getenv("SESSION_KEY")))
+var controlPassword string
 
 type User struct {
 	Name string
@@ -43,6 +44,7 @@ type Question struct {
 type PageData struct {
 	Question       Question
 	RemainingVotes int
+	Answered       bool
 }
 
 type QuestionRecord struct {
@@ -52,6 +54,12 @@ type QuestionRecord struct {
 	DateSubmitted string
 }
 
+type VoteResponse struct {
+	Result         string
+	Votes          int
+	RemainingVotes int
+}
+
 var DB *sql.DB
 
 func main() {
@@ -59,6 +67,12 @@ func main() {
 	godotenv.Load()
 	local = os.Getenv("RUN-LOCAL") // set to true if running on local machine
 	session_key = os.Getenv("SESSION-KEY")
+	controlPassword = os.Getenv("CONTROL-PASSWORD")
+
+	if controlPassword == "" {
+		panic("must set control password")
+	}
+
 	var srv *http.Server
 	r := mux.NewRouter()
 
@@ -87,12 +101,14 @@ func main() {
 
 	// Define routes
 	r.HandleFunc("/", home)
-	r.HandleFunc("/api", api_get).
-		Methods("GET")
-	r.HandleFunc("/api", api_post).
-		Methods("POST")
+	r.HandleFunc("/control", control)
+	r.HandleFunc("/login", login).Methods("POST")
 	r.HandleFunc("/api/answers", get_answers).Methods("GET")
+	r.HandleFunc("/api/answers", post_answer).Methods("POST")
+	r.HandleFunc("/api/approve", approve_answer).Methods("POST")
+	r.HandleFunc("/api/vote", vote).Methods("POST")
 	r.HandleFunc("/api/questions", get_questions).Methods("GET")
+	r.HandleFunc("/api/questions", post_question).Methods("POST")
 	r.HandleFunc("/loaderio-d76bfe3fee5c082595ab976a8b88ed42/", loader_auth)
 
 	//connect to db

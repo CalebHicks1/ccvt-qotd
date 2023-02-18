@@ -12,7 +12,7 @@
     <head>
         <link rel="stylesheet" href="/static/templates/stylesheet.css">
     </head>
-    <!-- <link rel="shortcut icon" href="/static/images/favicon.ico"> -->
+    <link rel="shortcut icon" href="/static/images/favicon.png">
 </head>
 
 <body>
@@ -29,7 +29,7 @@
 
                 <strong>{{ .Question.Body }}</strong>
             </p>
-            <!-- <ul class="nav justify-content-start" style="margin-left:0px!important;">
+            <ul class="nav justify-content-start" style="margin-left:0px!important;">
                 <li class="nav-link active" style=padding-left:0px;>
 
                     <a class="nav-item" style="margin-left:auto;margin-right:auto;" href="/">Home</a>
@@ -38,16 +38,16 @@
                     <a class="nav-item active" style="margin-left:auto;margin-right:auto;" href="/">Top
                         Answers</a>
                 </li>
-            </ul> -->
+            </ul>
         </div>
 
 
         <div style="padding-top:auto; padding-bottom:auto;">
-            <!-- {% if answered %} -->
-            <!-- <button class="post-answer-grey" id="myBtn">Post Answer</button> -->
-            <!-- {% else %} -->
+            {{ if .Answered }}
+            <button class="post-answer-grey" id="myBtn">Post Answer</button>
+            {{ else }}
             <button id="myBtn">Post Answer</button>
-            <!-- {% endif %} -->
+            {{ end }}
             <p id="remaining-votes" style="margin-bottom:0px!important;color:antiquewhite"><small>Remaining Votes:
                     {{ .RemainingVotes }}</small>
             </p>
@@ -55,7 +55,7 @@
 
     </nav>
 
-    <!-- {% if not answered %} -->
+    {{ if not .Answered }}
     <!-- The Modal -->
     <div id="myModal" class="modal">
 
@@ -108,7 +108,7 @@
             }
         }
     </script>
-    <!-- {% endif %} -->
+    {{ end }}
     <!-- Answers -->
 
     <div id="answers">
@@ -141,9 +141,9 @@
                     success: function (result) {
                         resultJson = JSON.parse(result)
 
-                        if (resultJson['result'] == 'success') {
-                            document.getElementById('remaining-votes').innerHTML = `<small>Remaining Votes: ${resultJson['remaining-votes']}</small>`
-                            if (resultJson['remaining-votes'] <= 0 || remainingVotes <= 0) {
+                        if (resultJson['Result'] == 'success') {
+                            document.getElementById('remaining-votes').innerHTML = `<small>Remaining Votes: ${resultJson['RemainingVotes']}</small>`
+                            if (resultJson['RemainingVotes'] <= 0 || remainingVotes <= 0) {
                                 moreVotes = false
                                 load_answers();
                             }
@@ -151,7 +151,7 @@
                             moreVotes = false
                         }
                         var voteCounter = document.getElementById('votes-' + answer_id);
-                        voteCounter.innerHTML = resultJson['votes'];
+                        voteCounter.innerHTML = resultJson['Votes'];
                     },
                     error: function (error) {
                         console.log(error);
