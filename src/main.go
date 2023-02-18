@@ -7,12 +7,14 @@ NOTES: use html/template to pass variables to html: https://stackoverflow.com/qu
 */
 
 import (
+	"database/sql"
 	"fmt"
-	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"time"
+
+	_ "github.com/go-sql-driver/mysql"
 
 	"github.com/gorilla/mux"
 	"github.com/gorilla/sessions"
@@ -26,45 +28,31 @@ type User struct {
 	Name string
 }
 
-func home(w http.ResponseWriter, r *http.Request) {
-	//http.ServeFile(w, r, working_dir+"static/index.html")
-
-	// Get a cokkie session: https://github.com/gorilla/sessions
-	session, _ := store.Get(r, "session")
-
-	// Build template from index.html
-	templ, err := template.ParseFiles("../static/index.html")
-	if err != nil {
-		fmt.Print(err)
-	}
-
-	usernameString, ok := session.Values["userName"].(string)
-	data := User{
-		Name: usernameString,
-	}
-	if ok {
-		data.Name = usernameString
-	}
-
-	templ.Execute(w, data)
+type Answer struct {
+	Id     int
+	Body   string
+	Votes  int
+	Author string
 }
 
-func api_get(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "running locally: %s", local)
+type Question struct {
+	Id   int
+	Body string
 }
 
-func api_post(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("POST request from %s: username=%s\n", r.RemoteAddr, r.PostFormValue("username"))
-	session, _ := store.Get(r, "session")
-	session.Values["userName"] = r.PostFormValue("username")
-	fmt.Printf(r.PostFormValue("username"))
-	err := session.Save(r, w)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	http.Redirect(w, r, "https://calebhicks.net", http.StatusSeeOther)
+type PageData struct {
+	Question       Question
+	RemainingVotes int
 }
+
+type QuestionRecord struct {
+	Id            int
+	Body          string
+	Author        string
+	DateSubmitted string
+}
+
+var DB *sql.DB
 
 func main() {
 	// Load .env file
@@ -103,8 +91,18 @@ func main() {
 		Methods("GET")
 	r.HandleFunc("/api", api_post).
 		Methods("POST")
+	r.HandleFunc("/api/answers", get_answers).Methods("GET")
+	r.HandleFunc("/api/questions", get_questions).Methods("GET")
+
+	//connect to db
+	connectionString := fmt.Sprintf("%s:%s@tcp(127.0.0.1:3306)/%s", "qotd", os.Getenv("DB-PASSWORD"), "qotd")
+	var err error
+	DB, err = sql.Open("mysql", connectionString)
+	if err != nil {
+		log.Fatal(err)
+	}
 
 	// Start the server
-
 	log.Fatal(srv.ListenAndServe())
+	defer DB.Close()
 }

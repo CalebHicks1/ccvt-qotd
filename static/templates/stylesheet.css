@@ -1,0 +1,210 @@
+@font-face {
+    font-family: Gulzar;
+    src: url('/static/fonts/Gulzar-Regular.ttf');
+}
+
+@font-face {
+    font-family: Open-Sans;
+    src: url('/static/fonts/OpenSans-Regular.ttf');
+}
+
+@font-face {
+    font-family: Open-Sans;
+    font-weight: bold;
+    src: url('/static/fonts/OpenSans-ExtraBold.ttf');
+}
+
+:root {
+    --bg-color: rgb(24, 22, 21);
+    --fg-color: rgb(235, 224, 212);
+    --text-color: rgb(37, 37, 36);
+    --h1-size: 80px;
+    --page-size: 900px;
+    --justify: left;
+    --min-page-size: 600px;
+    --padding-amount: 40px;
+}
+
+#btn-back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    display: none;
+    background-color: #242629;
+    border: 0px;
+    opacity: 80%;
+}
+
+:root {
+    scroll-behavior: smooth;
+}
+
+body {
+    /* font-weight: 600; */
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    /* background-color: rgb(255, 242, 233); */
+    background-color: var(--bg-color);
+    /* color: #c64600; */
+    color: #861f41;
+    text-align: center;
+    font-family: Open-Sans;
+}
+
+input {
+    border: 0;
+    border-radius: 5px;
+    width: 50%;
+}
+
+textarea {
+    border-radius: 5px;
+    width: 70%;
+    height: 70px
+}
+
+button {
+    background-color: #c64600;
+    /* background-color: #861f41; */
+    border-radius: 5px;
+    color: rgb(255, 235, 222);
+    border-color: rgb(255, 235, 222);
+    border: 0;
+    filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.363));
+}
+
+.button {
+    background-color: #c64600;
+    /* background-color: #861f41; */
+    border-radius: 5px;
+    color: rgb(255, 235, 222);
+    border-color: rgb(255, 235, 222);
+    border: 0;
+    filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.363));
+}
+
+.autohide {
+    position: static;
+    width: 100%;
+    z-index: 8000;
+}
+
+.votes {
+    font-size: 1.7rem;
+}
+
+.vote-button {
+    /* height: 50px !important; */
+    font-size: 1.3rem;
+    font-weight: 500;
+}
+
+.vote-button-grey {
+    /* height: 50px !important; */
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: rgb(194, 194, 194);
+    background-color: rgb(153, 153, 153);
+}
+
+.post-answer-grey {
+    /* height: 50px !important; */
+    color: rgb(194, 194, 194);
+    background-color: rgb(153, 153, 153);
+}
+
+.big-votes {
+    width: 5rem;
+}
+
+.answer-box {
+    margin: auto;
+    padding: 5px 5px 5px 5px;
+    border-radius: 5px;
+    background-color: #861f41;
+    color: rgb(255, 235, 222);
+    /* color: #c64600; */
+    word-wrap: break-word;
+    filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.363));
+    display: inline-block;
+    /* margin-top: auto;
+        margin-bottom: auto; */
+    width: 70%;
+    text-align: left;
+}
+
+h1 {
+    color: #c64600;
+}
+
+.answer-bg {
+    display: flex;
+    /* background-color: #c4c4c4; */
+    background-color: #343a40;
+    border-radius: 5px;
+    padding: 5px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    padding-top: auto;
+    padding-bottom: auto;
+    max-width: 90%;
+}
+
+/* The Modal (background) */
+.modal {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    /* Stay in place */
+    z-index: 1080;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    /* Full width */
+    height: 100%;
+    /* Full height */
+    overflow: auto;
+    /* Enable scroll if needed */
+    background-color: rgb(0, 0, 0);
+    /* Fallback color */
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+    padding-top: 30px;
+
+
+}
+
+/* Modal Content/Box */
+.modal-content {
+    filter: drop-shadow(5px 5px 5px rgba(0, 0, 0, 0.363));
+    border-radius: 5px;
+    /* background-color: #fefefe; */
+    background-color: #343a40;
+    /* color: black; */
+    color: antiquewhite;
+    /* margin: 15% auto; */
+    /* 15% from the top and centered */
+    padding: 20px;
+    z-index: 0;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+/* The Close Button */
+.close {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}

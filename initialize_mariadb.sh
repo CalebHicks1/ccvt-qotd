@@ -1,0 +1,1 @@
+sudo mysql -u "qotd" "-ppassword" -h localhost < init.sql

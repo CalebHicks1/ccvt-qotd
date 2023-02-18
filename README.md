@@ -1,11 +1,27 @@
-# Caleb's Webserver
-This is the start of my personal webserver. 
-Uses:
-- docker compose
-    - nginx
-    - webapp
+# CCVT Question of the Day
+This is an app to host the thursday night question of the day
+Tools:
 
-# Setup
+- GO
+- nginx
+- Docker (optional)
+
+# Local Setup
+For running without Docker
+1. Build binary
+```
+cd src/
+go mod init webserver
+go mod tidy
+GOOS=linux go build -ldflags="-s -w" -o ./bin/web-app ./main.go
+```
+2. Configure nginx
+```
+./install_and_configure_nginx.sh qotd.ccvt-home.com
+```
+3. Copy service script to `/lib/systemd/system/web-app.service`
+
+# Docker Setup
 Create `.env` file with the following values:
 ```
 # Random key to encrypt your session
