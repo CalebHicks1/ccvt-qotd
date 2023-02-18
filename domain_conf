@@ -1,0 +1,7 @@
+server {
+    server_name calebhicks.net www.calebhicks.net;
+
+    location / {
+        proxy_pass http://localhost:9990;
+    }
+}

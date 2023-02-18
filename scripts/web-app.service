@@ -1,0 +1,13 @@
+[Unit]
+Description=go-web-app
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=5s
+ExecStart=/bin/web-app
+
+[Install]
+WantedBy=multi-user.target
+
+// Put this in /lib/systemd/system/web-app.service

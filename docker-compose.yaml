@@ -1,0 +1,12 @@
+version: '2'
+services:
+  go-web-app:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+      - ./static:/usr/static:ro
+    environment:
+      - VIRTUAL_HOST=calebhicks.net
+      - LETSENCRYPT_HOST=calebhicks.net

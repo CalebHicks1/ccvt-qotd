@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caleb Hicks</title>
+    <link rel="stylesheet" href="/static/stylesheet.css">
+
+    <style>
+        .switch {
+            position: relative;
+            width: 60px;
+            height: 34px;
+            float: right;
+            margin-top: 20px
+        }
+
+        /* Hide default HTML checkbox */
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        /* The slider */
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgb(29, 29, 27);
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 40px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: rgb(252, 242, 231);
+            -webkit-transition: .4s;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked+.slider {
+            background-color: antiquewhite;
+        }
+
+        input:checked+.slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+            background-color: rgb(29, 29, 27);
+
+        }
+    </style>
+
+
+    <script>
+        function SwitchClicked() {
+            var dark_mode = document.querySelector('#color-scheme').checked;
+            localStorage.setItem('color-scheme', dark_mode);
+            ChangeTheme();
+        }
+        function ChangeTheme() {
+            console.log(localStorage.getItem('color-scheme'))
+            var dark_mode = localStorage.getItem('color-scheme');
+            var document_body = document.body;
+            var content = document.getElementById('content');
+            if (dark_mode == 'true') {
+                document_body.className = 'dark-mode'
+                content.className = 'dark-mode-content'
+                console.log("dark mode");
+
+            } else {
+                console.log("light mode")
+                document_body.className = 'light-mode'
+                content.className = 'light-mode-content'
+            }
+            console.log(dark_mode)
+
+        }
+    </script>
+</head>
+
+<body class="dark-mode">
+    <div id="content" class="dark-mode-content">
+        <label for="color-scheme" class="switch">
+            <input id="color-scheme" class="switch" type="checkbox" name="color-scheme" onclick="SwitchClicked()">
+            <span class="slider"></span>
+        </label>
+        {{ if .Name }}
+        <h1>Hello {{.Name}}!</h1>
+        {{else}}
+        <h1>Hello!</h1>
+        {{end}}
+        <h2>This is my website</h2>
+        <p>
+            I'm a senior at <a href="https://vt.edu/">Virginia Tech</a> studying computer science. I plan to use this
+            site to talk about the projects I'm working on, and to practice web development and api design.
+        </p>
+        <form action="/api" method="POST">
+            {{ if .Name }}
+            <input name="username" placeholder="what's your name?" type="hidden" value="">
+            <input type="submit" value="Clear Name">
+            {{else}}
+            <input name="username" placeholder="what's your name?" type="text">
+            <input type="submit" value="Submit">
+            {{end}}
+        </form>
+        <h2>Watch this:</h2>
+        <div class="video-container">
+            <iframe src="https://www.youtube.com/embed/93Da9Q8-PHE" title="The Chosen One" frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen></iframe>
+        </div>
+    </div>
+</body>
+
+<script>
+    document.querySelector('#color-scheme').checked = eval(localStorage.getItem('color-scheme'));
+    ChangeTheme();
+</script>
+
+</html>

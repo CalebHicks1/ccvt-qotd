@@ -1,0 +1,4 @@
+sudo snap install --classic certbot
+sudo ln -s /snap/bin/certbot /usr/bin/certbot
+sudo systemctl reload nginx
+sudo certbot --nginx -d your_domain -d your_domain
