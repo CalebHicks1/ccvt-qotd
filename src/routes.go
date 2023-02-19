@@ -214,24 +214,6 @@ func get_answers(w http.ResponseWriter, r *http.Request) {
 		session, _ := store.Get(r, "session")
 		if session.Values["logged_in"] != nil && session.Values["logged_in"].(bool) {
 			queryResult, err = DB.Query("select id, body, author, votes from answers where question_id=? and approved=0", question_id)
-			// if err != nil {
-			// 	panic(err.Error()) // proper error handling instead of panic in your app
-			// }
-			// var answers []Answer
-			// for queryResult.Next() {
-			// 	var a Answer
-			// 	err = queryResult.Scan(
-			// 		&a.Id,
-			// 		&a.Body,
-			// 		&a.Author,
-			// 	)
-			// 	answers = append(answers, a)
-			// }
-			// responseBytes, err := json.Marshal(answers)
-			// if err != nil {
-			// 	fmt.Printf("json error")
-			// }
-			// fmt.Fprintf(w, "%s", string(responseBytes))
 		}
 	} else if r.FormValue("source") == "home" {
 		queryResult, err = DB.Query("select id, body, author, votes from answers where question_id=? and approved=1 order by date_submitted ASC", question_id)

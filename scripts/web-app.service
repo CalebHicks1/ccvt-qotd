@@ -5,6 +5,7 @@ Description=go-web-app
 Type=simple
 Restart=always
 RestartSec=5s
+WorkingDirectory=/bin/
 ExecStart=/bin/web-app
 
 [Install]

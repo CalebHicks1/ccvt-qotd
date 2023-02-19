@@ -3,7 +3,8 @@ This is an app to host the thursday night question of the day
 Tools:
 
 - GO
-- nginx
+- Nginx
+- MariaDB
 - Docker (optional)
 
 # Local Setup
@@ -15,7 +16,7 @@ go mod init webserver
 go mod tidy
 go build
 ```
-2. Configure nginx
+2. Configure nginx: This moves the domain_conf file to the sites_enabled directory
 ```
 ./install_and_configure_nginx.sh qotd.ccvt-home.com
 ```
